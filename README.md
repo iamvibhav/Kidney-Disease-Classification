@@ -65,7 +65,7 @@ open up you local host and port
 ### dagshub
 [dagshub](https://dagshub.com/)
 
-MLFLOW_TRACKING_URI=https://dagshub.com/iamvibhav/Kidney-Disease-Classification.mlflow \
+<!-- MLFLOW_TRACKING_URI=https://dagshub.com/iamvibhav/Kidney-Disease-Classification.mlflow \
 MLFLOW_TRACKING_USERNAME=iamvibhav \
 MLFLOW_TRACKING_PASSWORD=54ff0ab70687798bee42af55d137516db3c47361 \
 python script.py
@@ -80,7 +80,7 @@ export MLFLOW_TRACKING_USERNAME=iamvibhav
 
 export MLFLOW_TRACKING_PASSWORD=54ff0ab70687798bee42af55d137516db3c47361
 
-```
+``` -->
 
 
 ### DVC cmd

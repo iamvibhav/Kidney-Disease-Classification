@@ -57,10 +57,6 @@ dmypy.json
 # VS Code
 .vscode/
 
-# DVC
-*.dvc
-.cache/
-.dvc/
 
 # Local env files
 .env
@@ -75,3 +71,7 @@ artifacts/*
 # OS files
 .DS_Store
 Thumbs.db
+
+#DVC
+.dvcignore
+dvc.lock
