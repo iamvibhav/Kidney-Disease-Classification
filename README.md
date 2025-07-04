@@ -166,7 +166,11 @@ $env:MLFLOW_TRACKING_PASSWORD="your_token_here"
 
 ## 📸 **Screenshots**
 
-> *(Add your app UI, predictions, and MLflow dashboard screenshots here.)*
+![Screenshot 2025-07-04 122519](https://github.com/user-attachments/assets/89d28ff6-c10c-4e59-b6c5-2dd7a7f9bced)
+![mlflow comparison](https://github.com/user-attachments/assets/50690997-a639-4b44-b70d-393fb6b09c15)
+![Screenshot 2025-07-04 122504](https://github.com/user-attachments/assets/9ffb914f-7667-4b4e-a023-16fbd297bde1)
+![DVC Diagram](https://github.com/user-attachments/assets/82ffec73-e7b4-4a08-837f-2fa35c14de99)
+
 
 ---
 
