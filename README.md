@@ -1,182 +1,220 @@
-# Kidney-Disease-Classification
+
+# 🩺 Renalyze: AI-Powered Kidney CT Scan Classification with End-to-End MLOps (Deep Learning | Docker | AWS)
+
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
+![MLflow](https://img.shields.io/badge/MLflow-Tracking-success)
+![DVC](https://img.shields.io/badge/DVC-Enabled-purple)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)
+
+---
+
+<details>
+<summary>📑 Table of Contents</summary>
+
+- [About the Project](#about-the-project)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Experiments & Tracking](#experiments--tracking)
+- [Deployment](#deployment)
+- [Screenshots](#screenshots)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgements](#acknowledgements)
+- [Contact](#contact)
+- [Beginner-Friendly Project Walkthrough](#beginner-friendly-project-walkthrough)
+
+</details>
+
+---
+
+## 🎯 **About the Project**
+
+**Renalyze** is an AI-powered web application that **classifies kidney CT scans** as either *Normal* or *Tumor*, providing rapid and accessible diagnostic assistance to healthcare professionals and researchers.
+
+Built with a robust deep learning pipeline using **transfer learning (VGG16)**, Renalyze integrates **modern MLOps practices** such as MLflow experiment tracking and DVC data versioning to ensure full reproducibility. Its **Flask-based web interface** offers an intuitive user experience for uploading scans and receiving instant predictions.
+
+The application is **containerized using Docker** for consistent, scalable deployment and orchestrated to **AWS EC2 and ECR via GitHub Actions CICD pipelines**, demonstrating real-world deployment workflows used in industry.
+
+---
 
 
-## Workflows
 
-1. Update config.yaml
-2. Update secrets.yaml [Optional]
-3. Update params.yaml
-4. Update the entity
-5. Update the configuration manager in src config
-6. Update the components
-7. Update the pipeline 
-8. Update the main.py
-9. Update the dvc.yaml
-10. app.py
 
-# How to run?
-### STEPS:
 
-Clone the repository
+
+## ✨ **Features**
+
+* 🧠 **Deep Learning**: Transfer learning with VGG16 for kidney CT scan classification (Normal vs Tumor)
+* 🔬 **Modular ML Pipeline**: Data ingestion, preprocessing, training, evaluation, and prediction stages
+* ⚙️ **MLOps Integration**: MLflow for experiment tracking, Dagshub for remote tracking, DVC for data/model versioning
+* 🌐 **Web Application**: Flask-based UI for image upload and real-time predictions
+* 🚀 **Deployment Ready**: Dockerized app with AWS EC2 & ECR deployment via GitHub Actions CICD
+* 🔧 **Configurable & Organized**: Central YAML configs, structured logging, and clean codebase for easy customization
+
+
+
+---
+
+
+## 💻 **Tech Stack**
+
+| Category             | Technologies / Libraries                     |
+| -------------------- | -------------------------------------------- |
+| **Language**         | Python 3.8+                                  |
+| **Deep Learning**    | TensorFlow, Keras, Transfer Learning (VGG16) |
+| **ML & Data**        | Scikit-learn, Pandas, NumPy                  |
+| **Web Framework**    | Flask, Flask-CORS                            |
+| **MLOps & Tracking** | MLflow, Dagshub, DVC                         |
+| **Deployment**       | Docker, AWS EC2, AWS ECR, GitHub Actions     |
+| **UI & Styling**     | HTML5, CSS3, Bootstrap 4, jQuery             |
+| **Utilities**        | PyYAML, JSON, Logging                        |
+| **Version Control**  | Git, GitHub                                  |
+
+
+---
+
+## 🗂️ **Project Structure**
+
+```
+
+Kidney-Disease-Classification/
+├── app.py                  # Flask web app entry point
+├── main.py                 # ML pipeline orchestrator (training, evaluation)
+├── params.yaml             # All training/config parameters
+├── requirements.txt        # Python dependencies
+├── Dockerfile              # Docker deployment config
+├── .gitignore              # Git ignore rules
+├── templates/
+│   └── index.html          # Web app UI
+├── artifacts/              # (gitignored) Trained models, logs, etc.
+│   └── training/model.h5   # Saved trained model
+├── research/               # Jupyter notebooks for experiments
+├── config/                 # YAML config files for pipeline
+├── src/
+│   └── cnnClassifier/
+│       ├── pipeline/       # Pipeline stages (ingestion, training, eval, prediction)
+│       ├── components/     # Core logic for each pipeline stage
+│       ├── entity/         # Config dataclasses
+│       ├── config/         # Configuration manager
+│       ├── utils/          # Helper functions
+│       └── logging/        # Logging setup
+├── scores.json             # Latest evaluation metrics
+└── README.md               # Project documentation
+
+````
+
+---
+
+## ⚙️ **Installation**
+
+1. **Clone the repository:**
 
 ```bash
-https://github.com/iamvibhav/Kidney-Disease-Classification
-```
-### STEP 01- Create a conda environment after opening the repository
+git clone https://github.com/iamvibhav/Kidney-Disease-Classification.git
+cd Kidney-Disease-Classification
+````
+
+2. **Create and activate virtual environment (conda recommended):**
 
 ```bash
-conda create -n cnncls python=3.9 -y
+conda create -n kidney python=3.9
+conda activate kidney
 ```
 
-```bash
-conda activate cnncls
-```
+3. **Install dependencies:**
 
-
-### STEP 02- install the requirements
 ```bash
 pip install -r requirements.txt
 ```
 
+4. **Initialize DVC:**
+
 ```bash
-# Finally run the following command
+dvc init
+dvc pull
+```
+
+---
+
+## 🚀 **Usage**
+
+### **Train the Model**
+
+```bash
+python main.py
+```
+
+Runs the full ML pipeline: data ingestion ➔ training ➔ evaluation ➔ saves best model.
+
+### **Launch the Web App**
+
+```bash
 python app.py
 ```
 
-Now,
-```bash
-open up you local host and port
+* Visit [http://localhost:8080](http://localhost:8080).
+* Upload a CT scan image and view predictions instantly.
+
+---
+
+## 🔬 **Experiments & Tracking**
+
+**MLflow + Dagshub integration** allows tracking parameters, metrics, and models remotely.
+
+1. **Authorize Dagshub (Windows example):**
+
+```powershell
+$env:MLFLOW_TRACKING_URI="https://dagshub.com/iamvibhav/Kidney-Disease-Classification.mlflow"
+$env:MLFLOW_TRACKING_USERNAME="iamvibhav"
+$env:MLFLOW_TRACKING_PASSWORD="your_token_here"
 ```
+---
+
+## 🚢 **Deployment**
+
+* **AWS CICD ready**: Uses Docker, GitHub Actions, and AWS EC2/ECR for automated deployment pipelines.
 
 
 
 
 
+---
 
-## MLflow
+## 📸 **Screenshots**
 
-- [Documentation](https://mlflow.org/docs/latest/index.html)
+> *(Add your app UI, predictions, and MLflow dashboard screenshots here.)*
 
-- [MLflow tutorial](https://youtu.be/qdcHHrsXA48?si=bD5vDS60akNphkem)
+---
 
-##### cmd
-- mlflow ui
+## 🤝 **Contributing**
 
-### dagshub
-[dagshub](https://dagshub.com/)
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -m 'Add new feature'`)
+4. Push to the branch (`git push origin feature/new-feature`)
+5. Open a Pull Request
 
-<!-- MLFLOW_TRACKING_URI=https://dagshub.com/iamvibhav/Kidney-Disease-Classification.mlflow \
-MLFLOW_TRACKING_USERNAME=iamvibhav \
-MLFLOW_TRACKING_PASSWORD=54ff0ab70687798bee42af55d137516db3c47361 \
-python script.py
+---
 
-Run this to export as env variables:
+## 📝 **License**
 
-```bash
+This project is licensed under the **MIT License**.
 
-export MLFLOW_TRACKING_URI=https://dagshub.com/iamvibhav/Kidney-Disease-Classification.mlflow
+---
 
-export MLFLOW_TRACKING_USERNAME=iamvibhav 
+## 📧 **Contact**
 
-export MLFLOW_TRACKING_PASSWORD=54ff0ab70687798bee42af55d137516db3c47361
-
-``` -->
-
-
-### DVC cmd
-
-1. dvc init
-2. dvc repro
-3. dvc dag
-
-
-## About MLflow & DVC
-
-MLflow
-
- - Its Production Grade
- - Trace all of your expriements
- - Logging & taging your model
-
-
-DVC 
-
- - Its very lite weight for POC only
- - lite weight expriements tracker
- - It can perform Orchestration (Creating Pipelines)
+**Vibhav**
+[Portfolio](https://iamvibhav30.vercel.app/) |[GitHub](https://github.com/iamvibhav) | [LinkedIn](https://linkedin.com/in/iamvibhav)
 
 
 
-# AWS-CICD-Deployment-with-Github-Actions
 
-## 1. Login to AWS console.
-
-## 2. Create IAM user for deployment
-
-	#with specific access
-
-	1. EC2 access : It is virtual machine
-
-	2. ECR: Elastic Container registry to save your docker image in aws
+*Built with ❤️ for impactful healthcare AI and as a showcase of full-stack ML engineering.*
 
 
-	#Description: About the deployment
-
-	1. Build docker image of the source code
-
-	2. Push your docker image to ECR
-
-	3. Launch Your EC2 
-
-	4. Pull Your image from ECR in EC2
-
-	5. Lauch your docker image in EC2
-
-	#Policy:
-
-	1. AmazonEC2ContainerRegistryFullAccess
-
-	2. AmazonEC2FullAccess
-
-	
-## 3. Create ECR repo to store/save docker image
-    - Save the URI: 566373416292.dkr.ecr.us-east-1.amazonaws.com/chicken
-
-	
-## 4. Create EC2 machine (Ubuntu) 
-
-## 5. Open EC2 and Install docker in EC2 Machine:
-	
-	
-	#optinal
-
-	sudo apt-get update -y
-
-	sudo apt-get upgrade
-	
-	#required
-
-	curl -fsSL https://get.docker.com -o get-docker.sh
-
-	sudo sh get-docker.sh
-
-	sudo usermod -aG docker ubuntu
-
-	newgrp docker
-	
-# 6. Configure EC2 as self-hosted runner:
-    setting>actions>runner>new self hosted runner> choose os> then run command one by one
-
-
-# 7. Setup github secrets:
-
-    AWS_ACCESS_KEY_ID=
-
-    AWS_SECRET_ACCESS_KEY=
-
-    AWS_REGION = us-east-1
-
-    AWS_ECR_LOGIN_URI = demo>>  566373416292.dkr.ecr.ap-south-1.amazonaws.com
-
-    ECR_REPOSITORY_NAME = simple-app
-
+---
