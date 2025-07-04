@@ -85,3 +85,37 @@ class Training:
             path=self.config.trained_model_path,
             model=self.model
         )
+   
+    def train(self):
+        self.steps_per_epoch = self.train_generator.samples // self.train_generator.batch_size
+        self.validation_steps = self.valid_generator.samples // self.valid_generator.batch_size
+
+    # --- Add these lines ---
+        from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
+
+        checkpoint_cb = ModelCheckpoint(
+        filepath=self.config.trained_model_path,
+        monitor="val_loss",
+        save_best_only=True,
+        mode="min",
+        verbose=1
+    )
+
+        early_stop_cb = EarlyStopping(
+        monitor="val_loss",
+        patience=5,
+        restore_best_weights=True,
+        verbose=1
+    )
+    # --- End of added lines ---
+
+        self.model.fit(
+        self.train_generator,
+        epochs=self.config.params_epochs,
+        steps_per_epoch=self.steps_per_epoch,
+        validation_steps=self.validation_steps,
+        validation_data=self.valid_generator,
+        callbacks=[checkpoint_cb, early_stop_cb]  # <-- Add callbacks here
+    )
+
+    # No need to call save_model here, ModelCheckpoint will handle saving the best model.

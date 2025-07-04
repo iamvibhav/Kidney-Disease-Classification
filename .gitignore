@@ -72,6 +72,3 @@ artifacts/*
 .DS_Store
 Thumbs.db
 
-#DVC
-.dvcignore
-dvc.lock

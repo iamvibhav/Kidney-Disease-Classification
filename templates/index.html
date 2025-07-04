@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Renalyze</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background: #181c24;
+        min-height: 100vh;
+        color: #e6e6e6;
+      }
+      .main-card {
+        background: #23283a;
+        border-radius: 16px;
+        box-shadow: 0 2px 24px rgba(44, 62, 80, 0.15);
+        padding: 2rem 2.5rem;
+        margin: 3rem auto;
+        max-width: 700px;
+      }
+      .app-title {
+        font-weight: 700;
+        color: #6ea8fe;
+        letter-spacing: 1px;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+      }
+      .upload-section {
+        border: 2px dashed #6ea8fe;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        background: #23283a;
+        margin-bottom: 2rem;
+      }
+      .upload-section img,
+      .upload-section video {
+        max-width: 220px;
+        max-height: 220px;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        border: 1px solid #343a4a;
+        background: #181c24;
+      }
+      .btn-custom {
+        min-width: 120px;
+        margin: 0 0.5rem;
+      }
+      .btn-outline-primary {
+        color: #6ea8fe;
+        border-color: #6ea8fe;
+      }
+      .btn-outline-primary:hover,
+      .btn-outline-primary:focus {
+        background: #6ea8fe;
+        color: #181c24;
+        border-color: #6ea8fe;
+      }
+      .btn-success {
+        background: #4fd1c5;
+        border-color: #4fd1c5;
+        color: #181c24;
+      }
+      .btn-success:hover,
+      .btn-success:focus {
+        background: #38b2ac;
+        border-color: #38b2ac;
+        color: #fff;
+      }
+      .results-section {
+        background: #23283a;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+        border: 1px solid #343a4a;
+      }
+      .results-section h5 {
+        color: #6ea8fe;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+      .prediction-result {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #4fd1c5;
+        margin-top: 1rem;
+        letter-spacing: 1px;
+      }
+      .prediction-normal {
+        color: #6ea8fe;
+      }
+      .prediction-tumor {
+        color: #ff6b81;
+      }
+      #loading {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: rgba(24, 28, 36, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .loader {
+        border: 8px solid #343a4a;
+        border-top: 8px solid #6ea8fe;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 2s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @media (max-width: 768px) {
+        .main-card {
+          padding: 1rem;
+        }
+        .upload-section,
+        .results-section {
+          padding: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="main-card">
+        <div class="text-center app-title">Renalyze</div>
+        <section class="upload-section">
+          <h4>Kidney Tumor Classification</h4>
+          <video
+            autoplay
+            id="video"
+            style="display: none"
+            poster="https://img.freepik.com/free-vector/group-young-people-posing-photo_52683-18824.jpg?size=338&ext=jpg"
+          ></video>
+          <img src="" id="photo" style="display: none" alt="Uploaded Image" />
+          <canvas style="display: none" id="canvas"></canvas>
+          <form id="upload-data" class="mt-3">
+            <input
+              name="upload"
+              type="file"
+              id="fileinput"
+              style="display: none"
+            />
+            <input
+              type="hidden"
+              class="form-control"
+              id="url"
+              value="../predict"
+            />
+            <div class="d-flex justify-content-center mt-3">
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-custom"
+                id="uload"
+              >
+                Upload Image
+              </button>
+              <button
+                id="send"
+                type="button"
+                class="btn btn-success btn-custom"
+              >
+                Predict
+              </button>
+            </div>
+          </form>
+        </section>
+        <section class="results-section">
+          <h5 class="text-center">Prediction Results</h5>
+          <div class="jsonRes text-center"></div>
+        </section>
+      </div>
+    </div>
+
+    <div id="loading" style="display: none"><div class="loader"></div></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+      var base_data = "";
+
+      function sendRequest(base64Data) {
+        var url = $("#url").val();
+        if (base64Data) {
+          $("#loading").show();
+          $.ajax({
+            url: url,
+            type: "post",
+            cache: false,
+            async: true,
+            crossDomain: true,
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+            data: JSON.stringify({ image: base64Data }),
+            success: function (res) {
+              // Show a clean result instead of raw JSON
+              var result = res[0] && res[0].image ? res[0].image : "Unknown";
+              var resultClass =
+                result.toLowerCase() === "tumor"
+                  ? "prediction-tumor"
+                  : "prediction-normal";
+              $(".jsonRes").html(
+                "<div class='prediction-result " +
+                  resultClass +
+                  "'>Prediction: " +
+                  result +
+                  "</div>"
+              );
+              $("#loading").hide();
+            },
+            error: function () {
+              $(".jsonRes").html(
+                "<span class='text-danger'>Prediction failed. Please try again.</span>"
+              );
+              $("#loading").hide();
+            },
+          });
+        }
+      }
+
+      $(document).ready(function () {
+        $("#loading").hide();
+
+        $("#send").click(function (evt) {
+          sendRequest(base_data);
+        });
+
+        $("#uload").click(function (evt) {
+          $("#fileinput").focus().trigger("click");
+        });
+
+        $("#fileinput").change(function () {
+          if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              var url = e.target.result;
+              var img = new Image();
+              img.crossOrigin = "Anonymous";
+              img.onload = function () {
+                var canvas = document.createElement("CANVAS");
+                var ctx = canvas.getContext("2d");
+                canvas.height = this.height;
+                canvas.width = this.width;
+                ctx.drawImage(this, 0, 0);
+                base_data = canvas
+                  .toDataURL("image/jpeg", 1.0)
+                  .replace(/^data:image.+;base64,/, "");
+                canvas = null;
+              };
+              img.src = url;
+              $("#photo").attr("src", url).show();
+              $("#video").hide();
+            };
+            reader.readAsDataURL(this.files[0]);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
