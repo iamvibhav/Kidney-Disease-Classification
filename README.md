@@ -7,27 +7,7 @@
 ![DVC](https://img.shields.io/badge/DVC-Enabled-purple)
 ![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)
 
----
 
-<details>
-<summary>📑 Table of Contents</summary>
-
-- [About the Project](#about-the-project)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Experiments & Tracking](#experiments--tracking)
-- [Deployment](#deployment)
-- [Screenshots](#screenshots)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
-- [Contact](#contact)
-- [Beginner-Friendly Project Walkthrough](#beginner-friendly-project-walkthrough)
-
-</details>
 
 ---
 
